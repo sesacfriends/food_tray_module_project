@@ -40,10 +40,9 @@ def getModel(version='n'):
     print("--- 모델 준비 완료")
     return model
 
-def trainModel(device, model, ypath):
+def trainModel(device, model, ypath, epoch, batch, name):
     print("모델 학습")
-    data_path = ypath
-    model.train(data=data_path, device=device, epochs=50)
+    model.train(data=ypath, device=device, epochs=epoch, batch=batch, name=name)
     
 
 if __name__ == "__main__":
@@ -59,4 +58,8 @@ if __name__ == "__main__":
     
     # yaml 파일 경로 수정
     ypath = '/Users/wonkyoung/food-project/data/data.yaml'
-    trainModel(device, model, ypath)
+    epochs = 500
+    batch = 8
+    # 조건에따라 name값 수정
+    name = 'food-project'
+    trainModel(device, model, ypath, epochs, batch, name)
