@@ -80,13 +80,19 @@ try:
         # Remove background - Set pixels further than clipping_distance to grey
         grey_color = 153
         depth_image_3d = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
+        
+        # 특정범위 이상과 이하는 배경 날리기
         bg_removed = np.where((depth_image_3d > clipping_distance) | (depth_image_3d <= 0), grey_color, color_image)
+        
+        # depth image 배경 안날린 것
+        bg_removed_none = np.where((depth_image_3d > clipping_distance) | (depth_image_3d <= 0), color_image, color_image)
 
         # Render images:
         #   depth align to color on left
         #   depth on right
         depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
-        images = np.hstack((bg_removed, depth_colormap))
+        images = np.hstack((bg_removed_none, depth_colormap))
+        # images = np.hstack((depth_image_3d, depth_colormap))
 
         cv2.namedWindow('Align Example', cv2.WINDOW_NORMAL)
         cv2.imshow('Align Example', images)
