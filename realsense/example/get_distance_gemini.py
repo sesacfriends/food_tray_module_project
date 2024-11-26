@@ -1,5 +1,6 @@
 import pyrealsense2 as rs
 import numpy as np
+import matplotlib.pyplot as plt
 import cv2
 
 # 파이프라인 설정 (깊이 스트림 활성화)
@@ -18,16 +19,19 @@ try:
         # 깊이 프레임을 NumPy 배열로 변환
         depth_image = np.asanyarray(depth_frame.get_data())
 
-        # 이미지 중앙 픽셀의 거리 출력 (센티미터 단위)
-        center_x = depth_image.shape[1] // 2
-        center_y = depth_image.shape[0] // 2
-        distance_meters = depth_frame.get_distance(center_x, center_y)
-        distance_cm = distance_meters * 100  # 미터를 센티미터로 변환
-        print(f"중앙 픽셀 거리: {distance_cm:.2f} cm")
+        # 미터 단위 거리 값을 센티미터 단위로 변환
+        depth_image_cm = depth_image * 100.0
 
-        # 깊이 이미지를 컬러맵으로 변환하여 표시 (선택 사항)
-        depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
-        cv2.imshow('Depth Image', depth_colormap)
+
+        # matplotlib을 사용하여 깊이 이미지를 표시
+        plt.imshow(depth_image_cm, cmap='jet')  # 컬러맵 적용 (viridis, plasma, inferno 등 다양한 컬러맵 사용 가능)
+        plt.colorbar(label='Distance (cm)')  # 컬러바 추가
+        plt.title('Depth Image (cm)')
+        plt.xlabel('X (pixels)')
+        plt.ylabel('Y (pixels)')
+        plt.pause(0.01)  # 이미지 업데이트
+        plt.clf()  # 이전 프레임 삭제
+
 
         if cv2.waitKey(1) == 27:  # ESC 키를 누르면 종료
             break
@@ -35,3 +39,4 @@ try:
 finally:
     pipeline.stop()  # 스트리밍 중지
     cv2.destroyAllWindows()
+    plt.close()  # matplotlib 창 닫기

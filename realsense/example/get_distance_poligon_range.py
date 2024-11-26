@@ -9,8 +9,10 @@ config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
 config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 pipeline.start(config)
 
+
+
 # 관심 영역 (ROI) 좌표 설정 (polygon 형식)
-roi_pts = np.array([[100, 100], [200, 100], [250, 200], [150, 250]], np.int32)  # 예시 polygon 좌표
+roi_pts = np.array([[200, 120], [285, 200], [285, 215], [285, 215]], np.int32)  # 예시 polygon 좌표
 roi_pts = roi_pts.reshape((-1, 1, 2))  # cv2.polylines() 함수에 필요한 형태로 변환
 
 try:
