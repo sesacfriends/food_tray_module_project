@@ -1,3 +1,5 @@
 .env
 runs/
 *.pt
+box_dimensioner_multicam/
+sample/
