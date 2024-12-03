@@ -18,64 +18,70 @@ def yolo2json_anylabeling(yolo_dir, image_dir, output_dir):
     for filename in os.listdir(yolo_dir): # yolo_dir 파일 목록 순회
         if filename.endswith(".txt"): # .txt 파일만 처리
             yolo_path = os.path.join(yolo_dir, filename) # yolo 파일 경로
-            image_name = filename[:-4] + ".jpg" # 이미지 파일 이름
-            image_path = os.path.join(image_dir, image_name)  # 이미지 파일 경로
-            output_path = os.path.join(output_dir, filename[:-4] + ".json") # 출력 JSON 파일 경로
+            base_name = filename[:-4]  # 파일 이름 (확장자 제외)
+            # image_name = filename[:-4] + ".jpg" # 이미지 파일 이름
+            # image_path = os.path.join(image_dir, image_name)  # 이미지 파일 경로
+            # output_path = os.path.join(output_dir, filename[:-4] + ".json") # 출력 JSON 파일 경로 # 확장자 제외
 
+            # 다양한 이미지 확장자 처리
+            image_path = None
+            for ext in [".jpg", ".jpeg", ".JPG", ".JPEG"]:
+                temp_path = os.path.join(image_dir, base_name + ext)
+                if os.path.exists(temp_path):
+                    image_path = temp_path
+                    image_name = base_name + ext # 이미지 파일 이름 (확장자 포함)
+                    break
+
+            if image_path is None:  # 이미지 파일을 찾지 못한 경우
+                            print(f"오류: {base_name}에 해당하는 이미지 파일을 찾을 수 없습니다.")
+                            continue
+
+            output_path = os.path.join(output_dir, base_name + ".json")
 
             try:
-                # 이미지 크기 가져오기
                 with Image.open(image_path) as img:
                     width, height = img.size
 
-
-                # YOLO 라벨 파일 파싱 및 JSON 데이터 생성
-                data = { # json 데이터 딕셔너리
+                data = {
                     "version": "0.4.15",
                     "flags": {},
                     "shapes": [],
-                    "imagePath": image_name,
+                    "imagePath": image_name,  # 확장자 포함 이미지 파일 이름 사용
                     "imageData": None,
                     "imageHeight": height,
                     "imageWidth": width
                 }
 
-                with open(yolo_path, 'r') as f: # yolo 파일 열기
+                with open(yolo_path, 'r') as f:
                     for line in f:
-                        parts = line.strip().split()  # 공백으로 분할
-                        class_id = parts[0]  # 클래스 ID
-                        points = [list(map(float, parts[i:i+2])) for i in range(1, len(parts), 2)] # 폴리곤 좌표
-                        # print("points: ", points) # 좌표 확인
+                        parts = line.strip().split()
+                        class_id = parts[0]
+                        points = [list(map(float, parts[i:i+2])) for i in range(1, len(parts), 2)]
 
-                        # AnyLabeling 형식의 shape 데이터 생성
                         shape = {
                             "label": class_id,
                             "text": "",
-                            "points": [[x * width, y * height] for x, y in points], # 좌표 스케일링 (정규화된 좌표 -> 픽셀 좌표)
+                            "points": [[x * width, y * height] for x, y in points],
                             "group_id": None,
                             "shape_type": "polygon",
                             "flags": {}
                         }
-                        data["shapes"].append(shape)  # shapes 리스트에 추가
+                        data["shapes"].append(shape)
 
-
-
-                # JSON 파일 저장
                 with open(output_path, 'w') as outfile:
-                    json.dump(data, outfile, indent=2) # json 파일 저장
+                    json.dump(data, outfile, indent=2)
 
                 print(f"{filename} 변환 완료: {output_path}")
 
-            except FileNotFoundError: # 파일 못찾으면 예외처리
-                print(f"오류: 이미지 파일 {image_path}을 찾을 수 없습니다.")
-            except Exception as e: # 기타 예외처리
+            except Exception as e:
                 print(f"오류: {filename} 변환 실패: {e}")
 
 
+
 # 사용 예시:
-yolo_dir = "C:/Users/han/Downloads/1_labeled/valid/labels"  # YOLO 라벨 파일 디렉토리
-image_dir = "C:/Users/han/Downloads/1_labeled/valid/images" # 이미지 파일 디렉토리
-output_dir = "C:/Users/han/Downloads/1_labeled/valid/json"  # 출력 디렉토리
+yolo_dir = "C:/Users/han/Downloads/1st_seg_data_test_241121/1st_seg_data_test_241121/train/07014001/labels"  # YOLO 라벨 파일 디렉토리
+image_dir = "C:/Users/han/Downloads/1st_seg_data_test_241121/1st_seg_data_test_241121/train/07014001/temp_ing" # 이미지 파일 디렉토리
+output_dir = "C:/Users/han/Downloads/1st_seg_data_test_241121/1st_seg_data_test_241121/train/07014001/jason"  # 출력 디렉토리
 
 
 
