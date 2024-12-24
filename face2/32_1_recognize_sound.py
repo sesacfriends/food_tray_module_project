@@ -2,16 +2,16 @@ import os
 import cv2
 import csv
 import time
-import pyttsx3
+# import pyttsx3
 
 
 # 음성 엔진 초기화 (여자 목소리 설정)
-engine = pyttsx3.init()
-voices = engine.getProperty('voices')
-for voice in voices:
-    if voice.gender == 'female':
-        engine.setProperty('voice', voice.id)
-        break
+#engine = pyttsx3.init()
+#voices = engine.getProperty('voices')
+# for voice in voices:
+#     if voice.gender == 'female':
+#         engine.setProperty('voice', voice.id)
+#         break
 
 # 3번 프로세스: 얼굴 인식
 def face_recognizer(user_name, train_path):
@@ -54,19 +54,19 @@ def face_recognizer(user_name, train_path):
 
                 if result[1] < 500:
                     confidence = int(100 * (1 - (result[1]) / 300))
-                    display_string = str(confidence) + '% Confidence it is ' + user_name
+                    display_string = str(confidence) + '% Confidence it is ' + user_id
                 cv2.putText(image, display_string, (100, 120), cv2.FONT_HERSHEY_COMPLEX, 1, (250, 120, 255), 2)
 
                 if confidence > 70:
                     cv2.putText(image, "Enjoy your meal", (250, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2)
                     cv2.imshow('FACE RECOGNITION', image)
                     print("-------------debug1-------------")
-                    engine.say(f"{user_name}님 식사 맛있게 하세요") # 음성 출력 추가
-                    engine.runAndWait() # 음성 출력 완료 대기
+                    #engine.say(f"{user_name}님 식사 맛있게 하세요") # 음성 출력 추가
+                    #engine.runAndWait() # 음성 출력 완료 대기
                     # 인식 후 바로 종료 (1번만 인식)
                     print("-------------debug2-------------")                
-                    time.sleep(10)
-                    break
+                    #time.sleep(10)
+                    #break
                 else:
                     cv2.putText(image, "You are not our member", (250, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255), 2)
                     cv2.imshow('FACE RECOGNITION', image)
@@ -93,6 +93,7 @@ try:
         reader = csv.DictReader(csvfile)
         for row in reader:
             user_name = row["이름"]
+            user_id = row["아이디"]
             train_path = os.path.join("train", row["아이디"])
             break
 except FileNotFoundError:
