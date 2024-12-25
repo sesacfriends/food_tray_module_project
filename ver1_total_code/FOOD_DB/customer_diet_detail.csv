@@ -1,0 +1,4 @@
+log_id,customer_id,total_weight,total_calories,timestamp,total_carb,total_fat,total_protein,total_ca,total_p,total_k,total_fe,total_zn
+20241225_sesac03_17,sesac03,214.76,429.4,2024-12-25 16:49:08,12.7,28.32,28.18,89.08,361.53,505.42,3.25,3.91
+20241225_sesac03_18,sesac03,51.49,148.45,2024-12-25 16:57:53,5.09,10.01,8.53,7.95,85.11,177.78,0.69,1.65
+20241225_sesac03_3,sesac03,46.81,142.16,2024-12-25 17:59:25,4.95,9.61,8.04,5.11,77.12,170.58,0.61,1.61

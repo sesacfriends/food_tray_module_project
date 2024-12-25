@@ -1,0 +1,5 @@
+id,name,birth,gender,phone,address,height,weight,exercise
+sesac01,alisha,19251022,F,01012345678,seoul,170.2,60.0,E
+sesac02,diana,19440301,F,01012345678,seoul,165.5,45.7,A
+sesac03,lucio,19400212,M,01012345678,seoul,178.8,78.3,C
+sesac04,peter,19500701,M,01012345678,seoul,190.1,85.2,C
