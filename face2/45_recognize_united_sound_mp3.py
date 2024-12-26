@@ -1,26 +1,15 @@
 
-# 속도 느림 -> 
-
 import os
 import cv2
 import csv
 import numpy as np
 import time
-import pyttsx3
 import glob
+import playsound
 
 # global 변수
 correct_uid = ''
 
-
-# 음성 엔진 시작 (여성 목소리)
-
-# engine = pyttsx3.init()
-# voices = engine.getProperty('voices')
-# for voice in voices:
-#     if voice.gender == 'female':
-#         engine.setProperty('voice', voice.id)
-#         break
 
 # 개인 별로 나뉘어진 학습 데이터 통합
 def create_unified_model(csv_filepath="user_info.csv"):
@@ -116,21 +105,18 @@ def face_recognizer(model, label_mapping):
                 if confidence > 80:
                     cv2.putText(image, "Enjoy your meal", (250, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2)
                     cv2.imshow('FACE RECOGNITION', image)
-                    # engine.say(f"{user_name}님 식사 맛있게 하세요") # 음성 출력 추가
-                    # engine.runAndWait() # 음성 출력 완료 대기
-                    # 인식 후 바로 종료 (1번만 인식)
+                    
                     # 제대로 인식했을 때
                     correct_uid = user_id
                     print(display_string)
                     print(correct_uid)
+                    playsound.playsound('./sound/01_user_login.mp3')
                     
-                    #break
+                    
                 else:
                     cv2.putText(image, "You are not our member", (250, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255), 2)
                     cv2.imshow('FACE RECOGNITION', image)
                     
-            # else:
-            #     raise Exception("Face Not Found")
 
         except Exception as e: # except문에서 e로 에러 정보 받기
             cv2.putText(image, "Face Not Found", (250, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2)
